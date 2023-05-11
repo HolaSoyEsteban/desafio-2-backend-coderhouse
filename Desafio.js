@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 class ProductManager {
     #products
     #error
@@ -18,12 +20,16 @@ class ProductManager {
         }
     }
 
-    addProduct = (title, description, price, thumbnail, code, stock) => {
+    addProduct = async (title, description, price, thumbnail, code, stock) => {
         this.#validateEvent(title, description, price, thumbnail, code, stock)
-        if (this.#error === undefined)
+        if (this.#error === undefined){
             this.#products.push({id: this.#generateId(), title, description, price, thumbnail, code, stock})
-        else console.log(this.#error)
-    }
+            await fs.promises.writeFile('./productos.json', JSON.stringify(this.#products, null, '\t'))
+        }
+        else {
+            console.log(this.#error)
+        } 
+        }
 
     getProducts = () => this.#products
 
@@ -35,6 +41,7 @@ class ProductManager {
     }
 
 }
+
 
 const productManager = new ProductManager();
 
